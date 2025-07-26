@@ -32,3 +32,174 @@
         transform: rotate(360deg);
     }
 }
+
+/* Custom animations for lyrics display */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wordReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes dramaticEntry {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) rotate(-5deg);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes happyBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  40% {
+    transform: translateY(-10px) scale(1.05);
+  }
+  60% {
+    transform: translateY(-5px) scale(1.02);
+  }
+}
+
+@keyframes sadFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-8px) scale(0.98);
+    opacity: 0.7;
+  }
+}
+
+@keyframes angryShake {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-2px) scale(1.02);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(2px) scale(1.02);
+  }
+}
+
+@keyframes calmFlow {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-5px) scale(1.01);
+    opacity: 0.95;
+  }
+}
+
+@keyframes energeticPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  25% {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+  }
+  50% {
+    transform: scale(1.1);
+    filter: brightness(1.4);
+  }
+  75% {
+    transform: scale(1.05);
+    filter: brightness(1.2);
+  }
+}
+
+/* Utility classes for animations */
+.animate-fadeInUp {
+  animation: fadeInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-wordReveal {
+  animation: wordReveal 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-dramaticEntry {
+  animation: dramaticEntry 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.animate-happyBounce {
+  animation: happyBounce 2s infinite;
+}
+
+.animate-sadFloat {
+  animation: sadFloat 3s infinite ease-in-out;
+}
+
+.animate-angryShake {
+  animation: angryShake 0.5s infinite;
+}
+
+.animate-calmFlow {
+  animation: calmFlow 4s infinite ease-in-out;
+}
+
+.animate-energeticPulse {
+  animation: energeticPulse 1s infinite;
+}
+
+/* Smooth transitions for all interactive elements */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Enhanced backdrop blur */
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
