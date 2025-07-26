@@ -206,13 +206,13 @@ const LyricsUploader = ({ onLyricsLoad }) => {
             <CardHeader>
               <CardTitle className="flex items-center text-white">
                 <Youtube className="mr-2 h-5 w-5" />
-                YouTube Link
+                YouTube Link (Demo Mode)
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <Label htmlFor="youtube-url" className="text-gray-300">
-                  Paste YouTube URL
+                  Paste YouTube URL (Demo with sample lyrics)
                 </Label>
                 <Input
                   id="youtube-url"
@@ -228,8 +228,11 @@ const LyricsUploader = ({ onLyricsLoad }) => {
                 className="w-full bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700"
                 disabled={!youtubeUrl.trim() || isProcessing}
               >
-                Extract Subtitles
+                Try Demo Mode
               </Button>
+              <p className="text-xs text-gray-400 mt-2">
+                💡 For real YouTube subtitles, you'd need to upload the subtitle file directly
+              </p>
             </CardContent>
           </Card>
         </div>
