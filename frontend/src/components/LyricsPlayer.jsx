@@ -278,7 +278,7 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
 
       {/* Settings Panel */}
       {showSettings && (
-        <Card className="absolute top-20 right-6 bg-black/60 backdrop-blur-md border-white/20 z-10">
+        <Card className="absolute top-20 right-6 bg-black/60 backdrop-blur-md border-white/20 z-20 transition-all duration-300">
           <CardContent className="p-4 space-y-3">
             <div>
               <label className="text-white text-sm block mb-2">Speed: {playbackSpeed}x</label>
