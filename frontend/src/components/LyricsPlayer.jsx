@@ -227,24 +227,24 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
       </div>
 
       {/* Controls Header */}
-      <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-10">
+      <div className="absolute top-6 left-6 right-6 flex justify-between items-center z-20">
         <Button
           onClick={onStop}
           variant="ghost"
           size="lg"
-          className="text-white hover:bg-white/20 backdrop-blur-sm"
+          className="text-white hover:bg-white/20 backdrop-blur-sm transition-all duration-300"
         >
           <ArrowLeft className="mr-2 h-5 w-5" />
           Back
         </Button>
         
-        <Card className="bg-black/40 backdrop-blur-md border-white/20">
+        <Card className="bg-black/40 backdrop-blur-md border-white/20 transition-all duration-300">
           <CardContent className="p-4 flex items-center space-x-4">
             <Button
               onClick={handleRestart}
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-white/20 transition-colors duration-200"
             >
               <RotateCcw className="h-4 w-4" />
             </Button>
@@ -252,7 +252,7 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
             <Button
               onClick={handlePlayPause}
               size="sm"
-              className="bg-white/20 hover:bg-white/30 text-white"
+              className="bg-white/20 hover:bg-white/30 text-white transition-all duration-200"
             >
               {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
             </Button>
@@ -261,7 +261,7 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
               onClick={() => setShowSettings(!showSettings)}
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20"
+              className="text-white hover:bg-white/20 transition-colors duration-200"
             >
               <Settings className="h-4 w-4" />
             </Button>
