@@ -11,6 +11,8 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [showSettings, setShowSettings] = useState(false);
   const [currentSentiment, setCurrentSentiment] = useState('neutral');
+  const [previousSentiment, setPreviousSentiment] = useState('neutral');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const intervalRef = useRef(null);
   const containerRef = useRef(null);
 
