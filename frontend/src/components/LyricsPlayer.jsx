@@ -70,7 +70,7 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
   };
 
   const currentLyric = lyrics[currentIndex] || { text: '', timestamp: 0 };
-  const styles = getSentimentStyles(currentSentiment);
+  const styles = getSentimentStyles(isTransitioning ? previousSentiment : currentSentiment);
   const words = currentLyric.text.split(' ');
   
   // Determine animation type based on word count
