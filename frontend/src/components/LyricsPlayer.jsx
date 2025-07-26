@@ -13,30 +13,43 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
   const [currentSentiment, setCurrentSentiment] = useState('neutral');
   const [previousSentiment, setPreviousSentiment] = useState('neutral');
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [backgroundTransition, setBackgroundTransition] = useState(false);
   const intervalRef = useRef(null);
   const containerRef = useRef(null);
+  const sentimentTransitionRef = useRef(null);
 
   const { lyrics } = lyricsData;
 
   useEffect(() => {
     if (isPlaying && currentIndex < lyrics.length) {
       const currentLyric = lyrics[currentIndex];
-      const duration = calculateDisplayDuration(currentLyric.text);
+      const duration = calculateDisplayDuration(currentLyric.text) / playbackSpeed;
       const sentiment = analyzeSentiment(currentLyric.text);
       
-      // Handle sentiment transitions smoothly
+      // Handle sentiment transitions with smooth background changes
       if (sentiment !== currentSentiment) {
+        // Clear any existing transition timeout
+        if (sentimentTransitionRef.current) {
+          clearTimeout(sentimentTransitionRef.current);
+        }
+        
+        setBackgroundTransition(true);
         setIsTransitioning(true);
         setPreviousSentiment(currentSentiment);
-        setTimeout(() => {
+        
+        // Smooth transition with proper timing
+        sentimentTransitionRef.current = setTimeout(() => {
           setCurrentSentiment(sentiment);
-          setTimeout(() => setIsTransitioning(false), 800);
-        }, 200);
+          setTimeout(() => {
+            setIsTransitioning(false);
+            setBackgroundTransition(false);
+          }, 1200);
+        }, 300);
       }
 
       intervalRef.current = setTimeout(() => {
         setCurrentIndex(prev => prev + 1);
-      }, duration / playbackSpeed);
+      }, duration);
     } else if (currentIndex >= lyrics.length) {
       setIsPlaying(false);
     }
@@ -44,6 +57,9 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
     return () => {
       if (intervalRef.current) {
         clearTimeout(intervalRef.current);
+      }
+      if (sentimentTransitionRef.current) {
+        clearTimeout(sentimentTransitionRef.current);
       }
     };
   }, [isPlaying, currentIndex, lyrics, playbackSpeed, currentSentiment]);
@@ -54,10 +70,10 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
     const isShortPhrase = words <= 3;
     const isLongPhrase = words > 8;
     
-    // More realistic timing based on reading speed and dramatic effect
-    if (isShortPhrase) return Math.max(3500, characters * 200); // Single words get longer, more dramatic display
-    if (isLongPhrase) return Math.max(5000, characters * 80); // Rapid sections need more time
-    return Math.max(4000, characters * 100); // Normal pace with character-based timing
+    // Adjusted timing for more realistic playback (reduced from previous values)
+    if (isShortPhrase) return Math.max(2500, characters * 140); // Single words - reduced timing
+    if (isLongPhrase) return Math.max(3500, characters * 60); // Rapid sections - reduced timing
+    return Math.max(2800, characters * 70); // Normal pace - reduced timing
   };
 
   const handlePlayPause = () => {
@@ -86,72 +102,110 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
   const renderDramaticWord = () => {
     const word = currentLyric.text;
     const wordLength = word.length;
+    const animationDuration = Math.min(2500 + wordLength * 100, 4000);
     
     return (
       <div 
         key={`dramatic-${currentIndex}`}
-        className="relative flex items-center justify-center"
+        className="relative flex items-center justify-center min-h-[400px]"
         style={{
-          animation: 'dramaticWordEntry 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+          animation: `dramaticWordEntry ${animationDuration}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`
         }}
       >
-        {/* Multiple background effects */}
+        {/* Enhanced multiple background effects */}
         <div className="absolute inset-0 flex items-center justify-center">
-          {/* Expanding ring effect */}
-          <div 
-            className={`absolute rounded-full border-4 ${styles.particleColor.replace('bg-', 'border-')} opacity-30`}
-            style={{
-              animation: 'expandingRing 3.5s ease-out forwards',
-              width: `${Math.min(wordLength * 40, 400)}px`,
-              height: `${Math.min(wordLength * 40, 400)}px`
-            }}
-          />
-          
-          {/* Pulsing glow */}
-          <div 
-            className={`absolute rounded-full ${styles.particleColor} opacity-20 blur-xl`}
-            style={{
-              animation: 'pulsingGlow 3.5s ease-in-out infinite',
-              width: `${Math.min(wordLength * 60, 600)}px`,
-              height: `${Math.min(wordLength * 60, 600)}px`
-            }}
-          />
-          
-          {/* Rotating particles */}
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className={`absolute w-4 h-4 ${styles.particleColor} rounded-full opacity-60`}
+          {/* Multiple expanding rings */}
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div 
+              key={`ring-${i}`}
+              className={`absolute rounded-full border-2 ${styles.particleColor.replace('bg-', 'border-')} opacity-20`}
               style={{
-                animation: `rotatingParticle 4s linear infinite`,
-                animationDelay: `${i * 0.5}s`,
-                transformOrigin: `${150 + wordLength * 5}px center`
+                animation: `expandingRing ${animationDuration + i * 500}ms ease-out ${i * 200}ms forwards`,
+                width: `${Math.min(wordLength * 30 + i * 50, 500)}px`,
+                height: `${Math.min(wordLength * 30 + i * 50, 500)}px`
               }}
             />
           ))}
+          
+          {/* Pulsing energy waves */}
+          <div 
+            className={`absolute rounded-full ${styles.particleColor} opacity-10 blur-2xl`}
+            style={{
+              animation: `energyWave ${animationDuration}ms ease-in-out infinite`,
+              width: `${Math.min(wordLength * 80, 800)}px`,
+              height: `${Math.min(wordLength * 80, 800)}px`
+            }}
+          />
+          
+          {/* Spiral particles */}
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div
+              key={`spiral-${i}`}
+              className={`absolute w-3 h-3 ${styles.particleColor} rounded-full opacity-70`}
+              style={{
+                animation: `spiralParticle ${animationDuration}ms linear infinite`,
+                animationDelay: `${i * 100}ms`,
+                transformOrigin: `${120 + wordLength * 8}px center`
+              }}
+            />
+          ))}
+          
+          {/* Floating orbs */}
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={`orb-${i}`}
+              className={`absolute w-6 h-6 ${styles.particleColor} rounded-full opacity-40 blur-sm`}
+              style={{
+                animation: `floatingOrb ${animationDuration + 1000}ms ease-in-out infinite`,
+                animationDelay: `${i * 300}ms`,
+                left: `${20 + (i * 15)}%`,
+                top: `${30 + (i % 3) * 20}%`
+              }}
+            />
+          ))}
+          
+          {/* Central glow effect */}
+          <div 
+            className={`absolute rounded-full ${styles.particleColor} opacity-15 blur-3xl`}
+            style={{
+              animation: `centralGlow ${animationDuration}ms ease-in-out infinite`,
+              width: `${Math.min(wordLength * 100, 1000)}px`,
+              height: `${Math.min(wordLength * 100, 1000)}px`
+            }}
+          />
         </div>
 
         {/* Main word with layered effects */}
         <div className="relative z-10">
-          {/* Shadow layer */}
+          {/* Multiple shadow layers for depth */}
           <h1 
-            className="absolute text-8xl md:text-9xl font-black opacity-30 blur-sm"
+            className="absolute text-8xl md:text-9xl font-black opacity-20 blur-lg"
             style={{
               fontFamily: styles.fontFamily,
-              transform: 'translate(8px, 8px) scale(1.05)',
-              color: 'rgba(0,0,0,0.5)'
+              transform: 'translate(12px, 12px) scale(1.08)',
+              color: 'rgba(0,0,0,0.8)'
+            }}
+          >
+            {word}
+          </h1>
+          <h1 
+            className="absolute text-8xl md:text-9xl font-black opacity-25 blur-md"
+            style={{
+              fontFamily: styles.fontFamily,
+              transform: 'translate(6px, 6px) scale(1.04)',
+              color: 'rgba(0,0,0,0.6)'
             }}
           >
             {word}
           </h1>
           
-          {/* Main text */}
+          {/* Main text with enhanced effects */}
           <h1 
             className={`relative text-8xl md:text-9xl font-black leading-tight ${styles.textColor}`}
             style={{
               fontFamily: styles.fontFamily,
-              textShadow: `${styles.textShadow}, 0 0 80px currentColor`,
-              animation: 'wordPulse 3.5s ease-in-out forwards'
+              textShadow: `${styles.textShadow}, 0 0 100px currentColor, 0 0 200px currentColor`,
+              animation: `wordPulse ${animationDuration}ms ease-in-out forwards, textGlow ${animationDuration}ms ease-in-out infinite`
             }}
           >
             {word.split('').map((char, i) => (
@@ -159,8 +213,8 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
                 key={i}
                 className="inline-block"
                 style={{
-                  animation: `letterDance 3.5s ease-in-out infinite`,
-                  animationDelay: `${i * 0.1}s`
+                  animation: `letterDance ${animationDuration}ms ease-in-out infinite, letterFloat ${animationDuration + 1000}ms ease-in-out infinite`,
+                  animationDelay: `${i * 80}ms, ${i * 120}ms`
                 }}
               >
                 {char}
@@ -168,17 +222,17 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
             ))}
           </h1>
           
-          {/* Sparkle overlay */}
+          {/* Enhanced sparkle overlay */}
           <div className="absolute inset-0">
-            {Array.from({ length: 12 }).map((_, i) => (
+            {Array.from({ length: 20 }).map((_, i) => (
               <div
                 key={i}
-                className="absolute w-2 h-2 bg-white rounded-full opacity-80"
+                className={`absolute w-1 h-1 ${styles.particleColor} rounded-full opacity-90`}
                 style={{
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
-                  animation: `sparkle 2s ease-in-out infinite`,
-                  animationDelay: `${Math.random() * 2}s`
+                  animation: `sparkle ${1000 + Math.random() * 2000}ms ease-in-out infinite, twinkle ${2000 + Math.random() * 1000}ms ease-in-out infinite`,
+                  animationDelay: `${Math.random() * animationDuration}ms`
                 }}
               />
             ))}
@@ -188,38 +242,70 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
     );
   };
 
+  // Enhanced normal word animation
+  const renderNormalWords = () => {
+    return (
+      <div 
+        key={currentIndex}
+        className="space-y-6 relative"
+      >
+        {/* Background glow for normal words */}
+        <div 
+          className={`absolute inset-0 ${styles.particleColor} opacity-5 blur-3xl rounded-full`}
+          style={{
+            animation: 'normalGlow 2s ease-in-out infinite'
+          }}
+        />
+        
+        {words.map((word, wordIndex) => (
+          <span
+            key={`${currentIndex}-${wordIndex}`}
+            className={`inline-block text-6xl md:text-7xl font-bold mr-6 ${styles.textColor} relative z-10`}
+            style={{
+              fontFamily: styles.fontFamily,
+              textShadow: `${styles.textShadow}, 0 0 40px currentColor`,
+              animation: `wordRevealEnhanced 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${wordIndex * 0.2}s both, wordFloat 3s ease-in-out infinite ${wordIndex * 0.3}s`
+            }}
+          >
+            {word}
+          </span>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div 
       ref={containerRef}
-      className={`min-h-screen relative overflow-hidden transition-all duration-1000 ${styles.background}`}
+      className={`min-h-screen relative overflow-hidden ${styles.background}`}
       style={{
         background: styles.dynamicBackground,
-        transition: 'background 1.5s cubic-bezier(0.4, 0, 0.2, 1)'
+        transition: backgroundTransition ? 'background 1.8s cubic-bezier(0.4, 0, 0.2, 1)' : 'none'
       }}
     >
-      {/* Smooth background transition overlay */}
+      {/* Enhanced smooth background transition overlay */}
       {isTransitioning && (
         <div 
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 opacity-80"
           style={{
             background: getSentimentStyles(previousSentiment).dynamicBackground,
-            animation: 'fadeOut 1.5s ease-out forwards'
+            animation: 'smoothFadeOut 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards'
           }}
         />
       )}
 
       {/* Enhanced background effects */}
       <div className="absolute inset-0 opacity-15">
-        {Array.from({ length: 25 }).map((_, i) => (
+        {Array.from({ length: 30 }).map((_, i) => (
           <div
             key={i}
-            className={`absolute rounded-full blur-xl ${styles.particleColor}`}
+            className={`absolute rounded-full blur-2xl ${styles.particleColor}`}
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 120 + 60}px`,
-              height: `${Math.random() * 120 + 60}px`,
-              animation: `floatingParticle ${3 + Math.random() * 4}s ease-in-out infinite`,
+              width: `${Math.random() * 150 + 80}px`,
+              height: `${Math.random() * 150 + 80}px`,
+              animation: `floatingParticle ${4 + Math.random() * 6}s ease-in-out infinite`,
               animationDelay: `${Math.random() * 2}s`
             }}
           />
@@ -301,26 +387,7 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
         <div className="text-center max-w-5xl">
           {animationType === 'dramatic' && renderDramaticWord()}
 
-          {animationType === 'normal' && (
-            <div 
-              key={currentIndex}
-              className="space-y-6"
-            >
-              {words.map((word, wordIndex) => (
-                <span
-                  key={`${currentIndex}-${wordIndex}`}
-                  className={`inline-block text-6xl md:text-7xl font-bold mr-6 ${styles.textColor}`}
-                  style={{
-                    fontFamily: styles.fontFamily,
-                    textShadow: styles.textShadow,
-                    animation: `wordRevealEnhanced 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${wordIndex * 0.25}s both`
-                  }}
-                >
-                  {word}
-                </span>
-              ))}
-            </div>
-          )}
+          {animationType === 'normal' && renderNormalWords()}
 
           {animationType === 'rapid' && (
             <div 
@@ -331,7 +398,7 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
                 className={`text-4xl md:text-5xl font-semibold leading-relaxed ${styles.textColor}`}
                 style={{
                   fontFamily: styles.fontFamily,
-                  textShadow: styles.textShadow,
+                  textShadow: `${styles.textShadow}, 0 0 30px currentColor`,
                   animation: 'rapidTextEntry 1s ease-out forwards'
                 }}
               >
@@ -345,7 +412,7 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
             <div 
               className={`inline-block px-6 py-3 rounded-full ${styles.sentimentBadge} backdrop-blur-sm border border-white/20 transition-all duration-500`}
               style={{
-                animation: 'sentimentBadgePulse 2s ease-in-out infinite'
+                animation: 'sentimentBadgePulse 3s ease-in-out infinite'
               }}
             >
               <span className="text-sm font-medium text-white/90 capitalize">
@@ -363,7 +430,7 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
             className={`h-full rounded-full transition-all duration-500 ${styles.progressColor}`}
             style={{ 
               width: `${((currentIndex + 1) / lyrics.length) * 100}%`,
-              boxShadow: '0 0 20px currentColor'
+              boxShadow: '0 0 30px currentColor, 0 0 60px currentColor'
             }}
           />
         </div>
