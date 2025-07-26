@@ -193,22 +193,34 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
       ref={containerRef}
       className={`min-h-screen relative overflow-hidden transition-all duration-1000 ${styles.background}`}
       style={{
-        background: styles.dynamicBackground
+        background: styles.dynamicBackground,
+        transition: 'background 1.5s cubic-bezier(0.4, 0, 0.2, 1)'
       }}
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0 opacity-20">
-        {Array.from({ length: 20 }).map((_, i) => (
+      {/* Smooth background transition overlay */}
+      {isTransitioning && (
+        <div 
+          className="absolute inset-0 z-0"
+          style={{
+            background: getSentimentStyles(previousSentiment).dynamicBackground,
+            animation: 'fadeOut 1.5s ease-out forwards'
+          }}
+        />
+      )}
+
+      {/* Enhanced background effects */}
+      <div className="absolute inset-0 opacity-15">
+        {Array.from({ length: 25 }).map((_, i) => (
           <div
             key={i}
-            className={`absolute rounded-full blur-xl animate-pulse ${styles.particleColor}`}
+            className={`absolute rounded-full blur-xl ${styles.particleColor}`}
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              width: `${Math.random() * 100 + 50}px`,
-              height: `${Math.random() * 100 + 50}px`,
-              animationDelay: `${Math.random() * 2}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
+              width: `${Math.random() * 120 + 60}px`,
+              height: `${Math.random() * 120 + 60}px`,
+              animation: `floatingParticle ${3 + Math.random() * 4}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 2}s`
             }}
           />
         ))}
