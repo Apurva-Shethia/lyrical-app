@@ -297,42 +297,23 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
       )}
 
       {/* Main Lyrics Display */}
-      <div className="absolute inset-0 flex items-center justify-center px-8">
-        <div className="text-center max-w-4xl">
-          {animationType === 'dramatic' && (
-            <div 
-              key={currentIndex}
-              className="animate-pulse"
-              style={{
-                animation: 'dramaticEntry 2.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-              }}
-            >
-              <h1 
-                className={`text-8xl md:text-9xl font-black leading-tight ${styles.textColor} ${styles.textShadow}`}
-                style={{
-                  fontFamily: styles.fontFamily,
-                  textShadow: styles.textShadow,
-                  transform: 'scale(1.1)',
-                }}
-              >
-                {currentLyric.text}
-              </h1>
-            </div>
-          )}
+      <div className="absolute inset-0 flex items-center justify-center px-8 z-10">
+        <div className="text-center max-w-5xl">
+          {animationType === 'dramatic' && renderDramaticWord()}
 
           {animationType === 'normal' && (
             <div 
               key={currentIndex}
-              className="space-y-4"
+              className="space-y-6"
             >
               {words.map((word, wordIndex) => (
                 <span
                   key={`${currentIndex}-${wordIndex}`}
-                  className={`inline-block text-6xl md:text-7xl font-bold mr-4 ${styles.textColor}`}
+                  className={`inline-block text-6xl md:text-7xl font-bold mr-6 ${styles.textColor}`}
                   style={{
                     fontFamily: styles.fontFamily,
                     textShadow: styles.textShadow,
-                    animation: `wordReveal 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${wordIndex * 0.2}s both`
+                    animation: `wordRevealEnhanced 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${wordIndex * 0.25}s both`
                   }}
                 >
                   {word}
@@ -351,6 +332,7 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
                 style={{
                   fontFamily: styles.fontFamily,
                   textShadow: styles.textShadow,
+                  animation: 'rapidTextEntry 1s ease-out forwards'
                 }}
               >
                 {currentLyric.text}
@@ -358,10 +340,15 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
             </div>
           )}
 
-          {/* Sentiment Indicator */}
-          <div className="mt-8">
-            <div className={`inline-block px-4 py-2 rounded-full ${styles.sentimentBadge} backdrop-blur-sm`}>
-              <span className="text-sm font-medium text-white/80 capitalize">
+          {/* Enhanced Sentiment Indicator */}
+          <div className="mt-12">
+            <div 
+              className={`inline-block px-6 py-3 rounded-full ${styles.sentimentBadge} backdrop-blur-sm border border-white/20 transition-all duration-500`}
+              style={{
+                animation: 'sentimentBadgePulse 2s ease-in-out infinite'
+              }}
+            >
+              <span className="text-sm font-medium text-white/90 capitalize">
                 {currentSentiment}
               </span>
             </div>
