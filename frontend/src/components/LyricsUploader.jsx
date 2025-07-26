@@ -151,8 +151,16 @@ const LyricsUploader = ({ onLyricsLoad }) => {
           </div>
           <p className="text-xl text-gray-300 max-w-2xl mx-auto">
             Transform your lyrics into a beautiful, dynamic visual experience. 
-            Upload subtitle files or paste YouTube links to get started.
+            Upload subtitle files for the full experience!
           </p>
+          <div className="mt-4 text-sm text-gray-400">
+            <span className="inline-block bg-green-500/20 text-green-400 px-3 py-1 rounded-full mr-2">
+              ✨ 100% Frontend-Only
+            </span>
+            <span className="inline-block bg-blue-500/20 text-blue-400 px-3 py-1 rounded-full">
+              🔒 No Data Stored
+            </span>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
