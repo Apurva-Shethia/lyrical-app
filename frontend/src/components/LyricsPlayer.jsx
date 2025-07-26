@@ -356,12 +356,15 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="absolute bottom-8 left-8 right-8">
-        <div className="bg-white/20 rounded-full h-2 backdrop-blur-sm">
+      {/* Enhanced Progress Bar */}
+      <div className="absolute bottom-8 left-8 right-8 z-10">
+        <div className="bg-white/20 rounded-full h-3 backdrop-blur-sm border border-white/10">
           <div 
-            className={`h-full rounded-full transition-all duration-300 ${styles.progressColor}`}
-            style={{ width: `${((currentIndex + 1) / lyrics.length) * 100}%` }}
+            className={`h-full rounded-full transition-all duration-500 ${styles.progressColor}`}
+            style={{ 
+              width: `${((currentIndex + 1) / lyrics.length) * 100}%`,
+              boxShadow: '0 0 20px currentColor'
+            }}
           />
         </div>
       </div>
