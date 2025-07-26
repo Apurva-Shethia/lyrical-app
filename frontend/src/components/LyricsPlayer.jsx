@@ -39,12 +39,14 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
 
   const calculateDisplayDuration = (text) => {
     const words = text.split(' ').length;
+    const characters = text.length;
     const isShortPhrase = words <= 3;
     const isLongPhrase = words > 8;
     
-    if (isShortPhrase) return 2500; // Single words get dramatic display
-    if (isLongPhrase) return 4000; // Rapid sections get chunked display
-    return 3000; // Normal pace
+    // More realistic timing based on reading speed and dramatic effect
+    if (isShortPhrase) return Math.max(3500, characters * 200); // Single words get longer, more dramatic display
+    if (isLongPhrase) return Math.max(5000, characters * 80); // Rapid sections need more time
+    return Math.max(4000, characters * 100); // Normal pace with character-based timing
   };
 
   const handlePlayPause = () => {
