@@ -63,31 +63,40 @@ const LyricsUploader = ({ onLyricsLoad }) => {
     setIsProcessing(true);
     
     try {
-      // Simulate YouTube processing
+      // For now, we'll use demo data due to CORS limitations
+      // In a real implementation, you'd need a serverless function proxy
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Use mock data for YouTube demo
       const mockLyrics = mockData.sampleLyrics;
       
       toast({
-        title: "YouTube subtitles extracted!",
-        description: `Loaded ${mockLyrics.length} lyric entries`,
+        title: "Demo Mode: Subtitles Loaded!",
+        description: `This is a demo with sample lyrics. Upload an SRT/LRC file for real subtitles.`,
       });
 
       onLyricsLoad({
-        title: "Sample Song from YouTube",
+        title: `Demo: ${extractVideoTitle(youtubeUrl)}`,
         lyrics: mockLyrics,
-        source: 'youtube',
+        source: 'youtube-demo',
         url: youtubeUrl
       });
     } catch (error) {
       toast({
-        title: "Error extracting subtitles",
-        description: "Please check the YouTube URL and try again",
+        title: "Demo Mode Active",
+        description: "YouTube extraction requires a backend proxy. Try uploading subtitle files instead!",
         variant: "destructive"
       });
     } finally {
       setIsProcessing(false);
+    }
+  };
+
+  const extractVideoTitle = (url) => {
+    try {
+      const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/);
+      return videoId ? `Video ${videoId[1].substring(0, 6)}...` : "YouTube Video";
+    } catch {
+      return "YouTube Video";
     }
   };
 
