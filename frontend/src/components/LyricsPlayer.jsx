@@ -82,6 +82,112 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
 
   const animationType = getAnimationType();
 
+  // Enhanced particle system for single words
+  const renderDramaticWord = () => {
+    const word = currentLyric.text;
+    const wordLength = word.length;
+    
+    return (
+      <div 
+        key={`dramatic-${currentIndex}`}
+        className="relative flex items-center justify-center"
+        style={{
+          animation: 'dramaticWordEntry 3.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+        }}
+      >
+        {/* Multiple background effects */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          {/* Expanding ring effect */}
+          <div 
+            className={`absolute rounded-full border-4 ${styles.particleColor.replace('bg-', 'border-')} opacity-30`}
+            style={{
+              animation: 'expandingRing 3.5s ease-out forwards',
+              width: `${Math.min(wordLength * 40, 400)}px`,
+              height: `${Math.min(wordLength * 40, 400)}px`
+            }}
+          />
+          
+          {/* Pulsing glow */}
+          <div 
+            className={`absolute rounded-full ${styles.particleColor} opacity-20 blur-xl`}
+            style={{
+              animation: 'pulsingGlow 3.5s ease-in-out infinite',
+              width: `${Math.min(wordLength * 60, 600)}px`,
+              height: `${Math.min(wordLength * 60, 600)}px`
+            }}
+          />
+          
+          {/* Rotating particles */}
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className={`absolute w-4 h-4 ${styles.particleColor} rounded-full opacity-60`}
+              style={{
+                animation: `rotatingParticle 4s linear infinite`,
+                animationDelay: `${i * 0.5}s`,
+                transformOrigin: `${150 + wordLength * 5}px center`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Main word with layered effects */}
+        <div className="relative z-10">
+          {/* Shadow layer */}
+          <h1 
+            className="absolute text-8xl md:text-9xl font-black opacity-30 blur-sm"
+            style={{
+              fontFamily: styles.fontFamily,
+              transform: 'translate(8px, 8px) scale(1.05)',
+              color: 'rgba(0,0,0,0.5)'
+            }}
+          >
+            {word}
+          </h1>
+          
+          {/* Main text */}
+          <h1 
+            className={`relative text-8xl md:text-9xl font-black leading-tight ${styles.textColor}`}
+            style={{
+              fontFamily: styles.fontFamily,
+              textShadow: `${styles.textShadow}, 0 0 80px currentColor`,
+              animation: 'wordPulse 3.5s ease-in-out forwards'
+            }}
+          >
+            {word.split('').map((char, i) => (
+              <span
+                key={i}
+                className="inline-block"
+                style={{
+                  animation: `letterDance 3.5s ease-in-out infinite`,
+                  animationDelay: `${i * 0.1}s`
+                }}
+              >
+                {char}
+              </span>
+            ))}
+          </h1>
+          
+          {/* Sparkle overlay */}
+          <div className="absolute inset-0">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-white rounded-full opacity-80"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animation: `sparkle 2s ease-in-out infinite`,
+                  animationDelay: `${Math.random() * 2}s`
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div 
       ref={containerRef}
