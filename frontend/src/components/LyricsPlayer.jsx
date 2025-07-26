@@ -23,7 +23,16 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
       const currentLyric = lyrics[currentIndex];
       const duration = calculateDisplayDuration(currentLyric.text);
       const sentiment = analyzeSentiment(currentLyric.text);
-      setCurrentSentiment(sentiment);
+      
+      // Handle sentiment transitions smoothly
+      if (sentiment !== currentSentiment) {
+        setIsTransitioning(true);
+        setPreviousSentiment(currentSentiment);
+        setTimeout(() => {
+          setCurrentSentiment(sentiment);
+          setTimeout(() => setIsTransitioning(false), 800);
+        }, 200);
+      }
 
       intervalRef.current = setTimeout(() => {
         setCurrentIndex(prev => prev + 1);
@@ -37,7 +46,7 @@ const LyricsPlayer = ({ lyricsData, onStop }) => {
         clearTimeout(intervalRef.current);
       }
     };
-  }, [isPlaying, currentIndex, lyrics, playbackSpeed]);
+  }, [isPlaying, currentIndex, lyrics, playbackSpeed, currentSentiment]);
 
   const calculateDisplayDuration = (text) => {
     const words = text.split(' ').length;
